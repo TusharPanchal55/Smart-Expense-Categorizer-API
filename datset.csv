@@ -1,0 +1,22 @@
+transaction,category
+Zomato Order,Food
+Swiggy Payment,Food
+Dominos Pizza,Food
+Starbucks Coffee,Food
+Uber Ride,Travel
+Ola Cab,Travel
+Bus Ticket,Travel
+Train Booking,Travel
+Amazon Purchase,Shopping
+Flipkart Order,Shopping
+Myntra Shopping,Shopping
+BigBasket Groceries,Shopping
+Electricity Bill,Bills
+Water Bill,Bills
+Airtel Recharge,Bills
+Jio Mobile Recharge,Bills
+Movie Ticket,Entertainment
+PVR Cinema,Entertainment
+Spotify Subscription,Entertainment
+Netflix Recharge,Entertainment
+
