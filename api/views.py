@@ -1,19 +1,25 @@
-from django.shortcuts import render # type: ignore
-from rest_framework.views import APIView # type: ignore
-from rest_framework.response import Response # type: ignore
-import joblib # type: ignore
+from rest_framework.views import APIView
+from rest_framework.response import Response
+import joblib
 
+# Load your model
 model = joblib.load("expense_model.pkl")
 
-class Expense_catogarizer(APIView):
+class ExpenseCategorizer(APIView):
     def post(self, request):
-        expense_text = request.data.get("transaction")
+        print("DEBUG request.data:", request.data)  # 👈 log incoming data
+
+        # Get the transaction text safely
+        expense_text = request.data.get("transaction") or request.POST.get("transaction")
+
 
         if not expense_text:
-            return Response ({"Error: No transaction Available"}, status = 400)
-        
+            return Response({"error": "No transaction provided"}, status=400)
+
+        # Predict category
         prediction = model.predict([expense_text])[0]
 
-        return Response({"Transaction" : expense_text, "Category" : prediction})
-
-
+        return Response({
+            "Transaction": expense_text,
+            "Category": prediction
+        })

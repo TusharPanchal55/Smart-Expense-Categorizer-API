@@ -16,9 +16,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from api.views import Expense_catogarizer
+from api.views import ExpenseCategorizer
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/categorizer/', Expense_catogarizer.as_view()),
+    path('api/categorizer/', ExpenseCategorizer.as_view()),
 ]
