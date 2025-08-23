@@ -1,25 +1,25 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
-import joblib
-
-# Load your model
-model = joblib.load("expense_model.pkl")
+import json
 
 class ExpenseCategorizer(APIView):
-    def post(self, request):
-        print("DEBUG request.data:", request.data)  # 👈 log incoming data
+    def post(self, request, *args, **kwargs):
+        transaction_text = None
 
-        # Get the transaction text safely
-        expense_text = request.data.get("transaction") or request.POST.get("transaction")
+        # Try request.data first
+        if "transaction" in request.data:
+            transaction_text = request.data.get("transaction")
+        else:
+            # Try manual JSON parsing
+            try:
+                data = json.loads(request.body.decode("utf-8"))
+                transaction_text = data.get("transaction") or data.get("Transaction")
+            except Exception as e:
+                print("JSON parse error:", e)
 
+        if not transaction_text:
+            return Response({"Error": "No transaction Available"}, status=400)
 
-        if not expense_text:
-            return Response({"error": "No transaction provided"}, status=400)
-
-        # Predict category
-        prediction = model.predict([expense_text])[0]
-
+        category = categorize_transaction(transaction_text)
         return Response({
-            "Transaction": expense_text,
-            "Category": prediction
+            "Transaction": transaction_text,
+            "Category": category
         })
