@@ -1,8 +1,12 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-import joblib
-from .utils import categorize_transaction
 import json
+import joblib
+import os
+
+# Load your trained model
+model_path = os.path.join(os.path.dirname(__file__), "expense_model.pkl")
+model = joblib.load(model_path)
 
 class ExpenseCategorizer(APIView):
     def post(self, request, *args, **kwargs):
@@ -11,6 +15,8 @@ class ExpenseCategorizer(APIView):
         # Try request.data first
         if "transaction" in request.data:
             transaction_text = request.data.get("transaction")
+        elif "Transaction" in request.data:
+            transaction_text = request.data.get("Transaction")
         else:
             # Try manual JSON parsing
             try:
@@ -22,7 +28,9 @@ class ExpenseCategorizer(APIView):
         if not transaction_text:
             return Response({"Error": "No transaction Available"}, status=400)
 
-        category = categorize_transaction(transaction_text)
+        # Predict category using ML model
+        category = model.predict([transaction_text])[0]
+
         return Response({
             "Transaction": transaction_text,
             "Category": category
