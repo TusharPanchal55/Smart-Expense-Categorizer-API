@@ -5,7 +5,8 @@ import joblib
 import os
 
 # Load your trained model
-model_path = os.path.join(os.path.dirname(__file__), "expense_model.pkl")
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+model_path = os.path.join(BASE_DIR, "expense_model.pkl")  # ✅ new path (root)
 model = joblib.load(model_path)
 
 class ExpenseCategorizer(APIView):
